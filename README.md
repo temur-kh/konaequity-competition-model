@@ -1,0 +1,1 @@
+# konaequity-competition-model
