@@ -3,7 +3,7 @@ import pandas as pd
 import nltk
 from nltk.corpus import stopwords
 
-from src.constants import *
+from service.constants import *
 
 nltk.download('punkt')
 nltk.download("stopwords")
@@ -31,7 +31,9 @@ class Preprocessor:
         if not pd.isna(row[CATEGORIES]):
             text += row[CATEGORIES] + ' '
         if not pd.isna(row[LINKEDIN_INDUSTRIES]):
-            text += row[LINKEDIN_INDUSTRIES]
+            text += row[LINKEDIN_INDUSTRIES] + ' '
+        if not pd.isna(row[GOOGLE_PLACES_INDUSTRY]):
+            text += row[GOOGLE_PLACES_INDUSTRY]
         if text != '':
             return text.strip()
         else:
@@ -45,7 +47,6 @@ class Preprocessor:
         tokenized = [word for word in tokenized if word.isalpha() and word not in stop_words]
         return ' '.join(tokenized)
 
-    @staticmethod
     def apply(self, df):
         df = df[USEFUL_COLUMNS]
         df[COUNTRY_REGION].fillna('United States', inplace=True)

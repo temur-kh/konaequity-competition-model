@@ -2,7 +2,7 @@ import gensim.downloader as api
 import pandas as pd
 import numpy as np
 
-from src.constants import *
+from service.constants import *
 
 
 class Vectorizer:
