@@ -31,7 +31,7 @@ class CompetitionModel:
         train_data = np.vstack(df[GS_VECTOR].values)
         self.gs_neigh_model.fit(train_data)
 
-    def find_competitors(self, id, max_k=6, model_weights=(0.4, 0.55, 0.05), radius=None, buffer_size=1000):
+    def find_competitors(self, id, max_k=6, model_weights=(0.4, 0.55, 0.05), radius=None, buffer_size=10000):
         # neighbors by industries
         df_size = len(self.df)
         join_dict = defaultdict(dict)
