@@ -39,25 +39,20 @@ class CompetitionModel:
         weights, ids = self.ind_neigh_model.kneighbors(x, n_neighbors=min(df_size, buffer_size))
         for weight, comp_id in zip(weights[0], ids[0]):
             join_dict[comp_id][IND_DISTANCE] = weight
-        # ind_df = pd.DataFrame({COMPETITOR_IDX: ids[0], IND_DISTANCE: weights[0]})
 
         # neighbors by descriptions
         x = np.vstack(self.df[self.df[COMPANY_ID] == id][DES_VECTOR].values)
         weights, ids = self.des_neigh_model.kneighbors(x, n_neighbors=min(df_size, buffer_size))
         for weight, comp_id in zip(weights[0], ids[0]):
             join_dict[comp_id][DES_DISTANCE] = weight
-        # des_df = pd.DataFrame({COMPETITOR_IDX: ids[0], DES_DISTANCE: weights[0]})
 
         # neighbors by G values
         x = np.vstack(self.df[self.df[COMPANY_ID] == id][GS_VECTOR].values)
         weights, ids = self.gs_neigh_model.kneighbors(x, n_neighbors=min(df_size, buffer_size))
         for weight, comp_id in zip(weights[0], ids[0]):
             join_dict[comp_id][GS_DISTANCE] = weight
-        # g_df = pd.DataFrame({COMPETITOR_IDX: ids[0], GS_DISTANCE: weights[0]})
 
         # join dataframes
-        # join_df = ind_df.merge(des_df.merge(g_df, on=COMPETITOR_IDX, how='outer'),
-        #                        on=COMPETITOR_IDX, how='outer')
         join_df = pd.DataFrame.from_dict(join_dict, orient='index')
         join_df.reset_index(level=0, inplace=True)
         join_df.rename({'index': COMPETITOR_IDX}, axis='columns', inplace=True)
