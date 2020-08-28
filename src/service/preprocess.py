@@ -15,7 +15,9 @@ class Preprocessor:
     # join descriptions to form a single one if possible
     @staticmethod
     def join_descriptions(row):
-        if not pd.isna(row[DESCRIPTION]):
+        if not pd.isna(row[LONGER_DESCRIPTION]):
+            return row[LONGER_DESCRIPTION]
+        elif not pd.isna(row[DESCRIPTION]):
             return row[DESCRIPTION]
         elif not pd.isna(row[LINKEDIN_BIO]):
             return row[LINKEDIN_BIO]
