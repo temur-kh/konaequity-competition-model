@@ -1,5 +1,4 @@
 import os
-import ast
 import pickle
 from collections import defaultdict
 from typing import Optional
@@ -61,7 +60,7 @@ class CompetitionModel:
         join_df[TOTAL_DISTANCE] = model_weights[0] * join_df[IND_DISTANCE] \
                                   + model_weights[1] * join_df[DES_DISTANCE] \
                                   + model_weights[2] * join_df[GS_DISTANCE]
-        join_df = join_df.sort_values(TOTAL_DISTANCE).iloc[1:].reset_index().head(max_k)
+        join_df = join_df.sort_values(TOTAL_DISTANCE).reset_index().head(max_k + 1)
 
         # result
         if radius:
@@ -73,6 +72,7 @@ class CompetitionModel:
         res_df[DES_DISTANCE] = join_df[DES_DISTANCE]
         res_df[GS_DISTANCE] = join_df[GS_DISTANCE]
         res_df[TOTAL_DISTANCE] = join_df[TOTAL_DISTANCE]
+        res_df = res_df[res_df[COMPANY_ID] != id].head(max_k)
         return res_df
 
     def save(self, dir_path):
