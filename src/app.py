@@ -36,8 +36,9 @@ def update_fields(thread_id, start, end):
     print(f'Thread: {thread_id}, Model loading completed:', time.time() - start_time)
     start_time = time.time()
     batch_input_list = []
+    stats = STATS_DICT
     for cnt, id in enumerate(model.df[COMPANY_ID].values[start:end]):
-        res_df: pd.DataFrame = model.find_competitors(id=id, max_k=6)
+        res_df, stats = model.find_competitors(id=id, max_k=6, stats=stats)
         competitors = res_df.to_dict('records')
         properties = {}
         for i, comp in enumerate(competitors):
@@ -50,28 +51,31 @@ def update_fields(thread_id, start, end):
         batch_input = SimplePublicObjectBatchInput(id=str(id), properties=properties)
         batch_input_list.append(batch_input)
         if len(batch_input_list) == 100:
-            batch_inputs = BatchInputSimplePublicObjectBatchInput(batch_input_list)
-            hubspot = create_client()
-            hubspot.crm.companies.batch_api.update(batch_inputs)
+            # batch_inputs = BatchInputSimplePublicObjectBatchInput(batch_input_list)
+            # hubspot = create_client()
+            # hubspot.crm.companies.batch_api.update(batch_inputs)
             batch_input_list = []
             print(f'Thread: {thread_id}, Breakpoint: {start+cnt}, Time: {time.time()-start_time}')
+            print(stats)
+            stats = STATS_DICT
             start_time = time.time()
 
     if len(batch_input_list):
-        hubspot = create_client()
-        batch_inputs = BatchInputSimplePublicObjectBatchInput(batch_input_list)
-        hubspot.crm.companies.batch_api.update(batch_inputs)
+        # hubspot = create_client()
+        # batch_inputs = BatchInputSimplePublicObjectBatchInput(batch_input_list)
+        # hubspot.crm.companies.batch_api.update(batch_inputs)
         print(f'Thread: {thread_id}, Breakpoint: {end-1}, Time: {time.time()-start_time}')
 
 
 if __name__ == '__main__':
-    create_client('83ddd090-a3c0-41ae-8464-9fa00cded9c9')
+    # create_client('83ddd090-a3c0-41ae-8464-9fa00cded9c9')
     build_models()
-    threads = []
-    for i in range(1, 5):
-        thread = threading.Thread(target=update_fields, args=(i, 72500*(i-1), 72500*i))
-        thread.start()
-        threads.append(thread)
-    for thread in threads:
-        thread.join()
+    update_fields(0, start=0, end=300000)
+    # threads = []
+    # for i in range(1, 2):
+    #     thread = threading.Thread(target=update_fields, args=(i, 0, 300000))
+    #     thread.start()
+    #     threads.append(thread)
+    # for thread in threads:
+    #     thread.join()
     print('Application completed!')
