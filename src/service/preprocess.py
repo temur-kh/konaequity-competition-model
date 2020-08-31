@@ -51,7 +51,7 @@ class Preprocessor:
 
     def apply(self, df):
         df = df[USEFUL_COLUMNS]
-        df[COUNTRY_REGION].fillna('United States', inplace=True)
+        df[COUNTRY_REGION].fillna(DEFAULT_COUNTRY, inplace=True)
 
         df[ALL_INDUSTRIES] = df.apply(lambda row: self.join_industries(row), axis=1)
         df[FULL_DESCRIPTION] = df.apply(lambda row: self.join_descriptions(row), axis=1)
